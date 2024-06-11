@@ -11,6 +11,28 @@ def initialize_db():
         password TEXT NOT NULL
     )
     ''')
+    #Create students table/enroll
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS students (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        parent_name TEXT NOT NULL,
+        level TEXT NOT NULL
+    )
+    ''')
+
+     # Create inventory table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS inventory (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        item_name TEXT NOT NULL,
+        quantity INTEGER NOT NULL
+    )
+    ''')
+
+
+
     conn.commit()
     conn.close()
 

@@ -1,7 +1,7 @@
-from app import user
+from user import User
 
 # Add a user
-user.add_user("John Mwangi", "password123")
+user.add_user("admin", ".")
 
 # Retrieve a user
 user_data = user.get_user("John Mwangi")
