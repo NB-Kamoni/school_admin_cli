@@ -1,5 +1,6 @@
 import sqlite3
 
+#Initializes db and creates user table
 def initialize_db():
     conn = sqlite3.connect('school.db')
     cursor = conn.cursor()
@@ -12,3 +13,4 @@ def initialize_db():
     ''')
     conn.commit()
     conn.close()
+

@@ -5,7 +5,7 @@ class User:
         self.username = username
         self.password = password  # Store the plain text password
         print(f"Debug: Created user with username {self.username} and password {self.password}")
-
+# Save username and passord into the db--------------
     def save_to_db(self):
         conn = sqlite3.connect('school.db')
         cursor = conn.cursor()
@@ -16,7 +16,7 @@ class User:
         except sqlite3.IntegrityError:
             print(f"User {self.username} already exists.")
         conn.close()
-
+# User authentication--------------------------------
     @staticmethod
     def authenticate(username, password):
         conn = sqlite3.connect('school.db')
@@ -25,8 +25,6 @@ class User:
         record = cursor.fetchone()
         conn.close()
 
-        print(f"Debug: Retrieved password from database: {record}")
-        print(f"Debug: Input password: {password}")
 
         if record and record[0] == password:
             return True
