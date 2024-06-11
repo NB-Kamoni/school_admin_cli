@@ -36,12 +36,16 @@ def display_students_table():
     if not students:
         print(Fore.RED + "No students found.")
     else:
-        table = Table(show_header=True, header_style="", show_lines=False)
+        print("")
+        print("")
+        print(Fore.LIGHTGREEN_EX + "Student Data")
+        print("")
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
         table.add_column("ID", style="dim", width=6)
-        table.add_column("Name", style="bold magenta")
-        table.add_column("Age", style="bold magenta")
-        table.add_column("Parent Name", style="bold magenta")
-        table.add_column("Level", style="bold magenta")
+        table.add_column("Name", style="magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Parent Name", style=" magenta")
+        table.add_column("Level", style="magenta")
 
         for student in students:
             table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4])
