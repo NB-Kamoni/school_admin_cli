@@ -34,13 +34,13 @@ class Student:
         conn.close()
         return students
     @staticmethod
-    def get_by_id(student_id):
+    def get_by_id(id):
         conn = sqlite3.connect('school.db')
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM students WHERE id = ?', (id,))
-        student = cursor.fetchone()
+        students = cursor.fetchall()
         conn.close()
-        return student
+        return students
 
     @staticmethod
     def get_by_level(level):

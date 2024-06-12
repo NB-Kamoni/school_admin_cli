@@ -86,8 +86,24 @@ def display_student_details(student_id):
         console.print(Fore.RED + f"No student found with ID '{student_id}'")
 
 def search_student_by_id():
-    student_id = int(input(Fore.YELLOW + "Enter student ID: "))
-    display_student_details(student_id)
+    id = input(Fore.YELLOW + "Enter student ID: ")
+    students = Student.get_by_id(id)
+
+    if not students:
+        print(Fore.RED + f"No students found at level '{id}'")
+    else:
+        table = Table(show_header=True, header_style="bold green")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name")
+        table.add_column("Age")
+        table.add_column("Parent Name")
+        table.add_column("Level")
+        table.add_column("Phone Number")
+
+        for student in students:
+            table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
+
+        console.print(table)
 
 def search_student_by_level():
     level = input(Fore.YELLOW + "Enter student level: ")
