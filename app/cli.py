@@ -65,7 +65,7 @@ def enroll_new_student():
     console.print(Fore.GREEN + "Student enrolled successfully!")
   
 
-#Student search functionality
+# Student search functionality
 def display_student_details(student_id):
     # Retrieve student details from the database based on student_id
     student = Student.get_by_id(student_id)
@@ -86,12 +86,28 @@ def display_student_details(student_id):
         console.print(Fore.RED + f"No student found with ID '{student_id}'")
 
 def search_student_by_id():
-    # Input student ID
     student_id = int(input(Fore.YELLOW + "Enter student ID: "))
-    
-    # Display student details
     display_student_details(student_id)
 
+def search_student_by_level():
+    level = input(Fore.YELLOW + "Enter student level: ")
+    students = Student.get_by_level(level)
+    
+    if not students:
+        console.print(Fore.RED + f"No students found at level '{level}'")
+    else:
+        table = Table(show_header=True, header_style="bold green")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name")
+        table.add_column("Age")
+        table.add_column("Parent Name")
+        table.add_column("Level")
+        table.add_column("Phone Number")
+
+        for student in students:
+            table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
+
+        console.print(table)
 
 # delete students
 def delete_student():
@@ -212,6 +228,20 @@ def main():
                             delete_student()
                         elif choice == 's':
                             display_students_table()
+                        elif choice == 'f':
+                            print("1 :Search by ID")
+                            print("2 :Search by Level")
+                            print("3 :Back")
+                            search_choice = input(Fore.LIGHTGREEN_EX + "Choose search option: ")
+                            if search_choice == '1':
+                                search_student_by_id()
+                            elif search_choice == '2':
+                                search_student_by_level()
+                            elif choice == '3':
+                                break
+                            else:
+                                console.print(Fore.RED + "Invalid choice, please try again.")
+                            
                         elif choice == 'g':
                             export_students_to_csv()
             

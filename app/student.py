@@ -33,3 +33,20 @@ class Student:
         students = cursor.fetchall()
         conn.close()
         return students
+    @staticmethod
+    def get_by_id(student_id):
+        conn = sqlite3.connect('school.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM students WHERE id = ?', (id,))
+        student = cursor.fetchone()
+        conn.close()
+        return student
+
+    @staticmethod
+    def get_by_level(level):
+        conn = sqlite3.connect('school.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM students WHERE level = ?', (level,))
+        students = cursor.fetchall()
+        conn.close()
+        return students
