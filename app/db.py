@@ -18,7 +18,9 @@ def initialize_db():
         name TEXT NOT NULL,
         age INTEGER NOT NULL,
         parent_name TEXT NOT NULL,
-        level TEXT NOT NULL
+        level TEXT NOT NULL,
+        phone_number TEXT NOT NULL,
+        photo_path TEXT                      
     )
     ''')
 

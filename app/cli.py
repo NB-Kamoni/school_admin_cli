@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import getpass
+import tkinter as tk
+from tkinter import filedialog
+import shutil
+import os
 import csv
 from colorama import Fore
 from rich.console import Console
@@ -13,16 +17,81 @@ from inventory import Inventory
 
 console = Console()
 
+
+# Select student photo
+def select_student_photo():
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    
+    file_path = filedialog.askopenfilename()  # Open file dialog window
+    
+    return file_path
 # enroll students
 def enroll_new_student():
     name = input(Fore.YELLOW + "Enter student name: ")
     age = int(input(Fore.YELLOW + "Enter student age: "))
     parent_name = input(Fore.YELLOW + "Enter parent name: ")
     level = input(Fore.YELLOW + "Enter student level: ")
+    phone_number = input(Fore.LIGHTMAGENTA_EX + "Enter parent's phone number: ")
 
-    student = Student(name, age, parent_name, level)
+    student = Student(name, age, parent_name, level, phone_number)
+
+     # Select student photo
+    console.print(Fore.YELLOW + "Please select student photo...")
+    student_photo_path = select_student_photo()
+    
+    # Ensure a photo is selected
+    if not student_photo_path:
+        console.print(Fore.RED + "No photo selected. Student enrollment aborted.")
+        return
+
+    # Save student photo with an incrementing integer as filename
+    photos_directory = 'photos'
+    os.makedirs(photos_directory, exist_ok=True)
+
+    # Find the next available filename by iterating over existing files
+    next_filename = 1
+    while os.path.exists(os.path.join(photos_directory, f"{next_filename}.jpg")):
+        next_filename += 1
+
+    new_photo_path = os.path.join(photos_directory, f"{next_filename}.jpg")
+    shutil.copy(student_photo_path, new_photo_path)
+
+    # Update student object with photo path
+    student.photo_path = new_photo_path
+
+
     student.save_to_db()
     console.print(Fore.GREEN + "Student enrolled successfully!")
+  
+
+#Student search functionality
+def display_student_details(student_id):
+    # Retrieve student details from the database based on student_id
+    student = Student.get_by_id(student_id)
+    
+    if student:
+        # Display student details
+        console.print(f"Student ID: {student.id}")
+        console.print(f"Name: {student.name}")
+        console.print(f"Level: {student.level}")
+        
+        # Display student photo
+        if student.photo_path:
+            console.print(Fore.YELLOW + "Displaying student photo...")
+            os.system(f"xdg-open {student.photo_path}")  # Open photo using default image viewer
+        else:
+            console.print(Fore.RED + "No photo available for this student.")
+    else:
+        console.print(Fore.RED + f"No student found with ID '{student_id}'")
+
+def search_student_by_id():
+    # Input student ID
+    student_id = int(input(Fore.YELLOW + "Enter student ID: "))
+    
+    # Display student details
+    display_student_details(student_id)
+
 
 # delete students
 def delete_student():
@@ -38,7 +107,7 @@ def display_students_table():
     else:
         print("")
         print("")
-        print(Fore.LIGHTGREEN_EX + "Student Data")
+        print(Fore.LIGHTGREEN_EX + "Student Records")
         print("")
         table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
         table.add_column("ID", style="dim", width=6)
@@ -46,9 +115,10 @@ def display_students_table():
         table.add_column("Age", style="magenta")
         table.add_column("Parent Name", style=" magenta")
         table.add_column("Level", style="magenta")
+        table.add_column("Phone Number", style="magenta")
 
         for student in students:
-            table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4])
+            table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
 
         console.print(table)
 
@@ -63,7 +133,7 @@ def export_students_to_csv():
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
         # Writing headers
-        writer.writerow(["ID", "Name", "Age", "Parent Name", "Level"])
+        writer.writerow(["ID", "Name", "Age", "Parent Name", "Level", "Phone Number"])
         # Writing student data
         writer.writerows(students)
 
@@ -133,6 +203,7 @@ def main():
                         print("d :Deregister Student")
                         print("s :Show Student Data")
                         print("g :Get csv data")
+                        print("f :find")
                         print("b :Back")
                         choice = input(Fore.LIGHTGREEN_EX + "Choose action:")
                         if choice == 'e':
@@ -143,6 +214,7 @@ def main():
                             display_students_table()
                         elif choice == 'g':
                             export_students_to_csv()
+            
                         elif choice == 'b':
                             break
                     

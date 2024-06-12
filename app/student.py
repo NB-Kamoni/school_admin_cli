@@ -1,17 +1,18 @@
 import sqlite3
 
 class Student:
-    def __init__(self, name, age, parent_name, level):
+    def __init__(self, name, age, parent_name, level, phone_number):
         self.name = name
         self.age = age
         self.parent_name = parent_name
         self.level = level
+        self.phone_number = phone_number
 
     def save_to_db(self):
         conn = sqlite3.connect('school.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO students (name, age, parent_name, level) VALUES (?, ?, ?, ?)', 
-                       (self.name, self.age, self.parent_name, self.level))
+        cursor.execute('INSERT INTO students (name, age, parent_name, level, phone_number) VALUES (?, ?, ?, ?, ?)', 
+                       (self.name, self.age, self.parent_name, self.level, self.phone_number))
         conn.commit()
         conn.close()
 
