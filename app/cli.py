@@ -9,6 +9,7 @@ import csv
 from colorama import Fore
 from rich.console import Console
 from rich.table import Table
+from rich import print
 from db import initialize_db
 from user import User
 from student import Student
@@ -66,24 +67,24 @@ def enroll_new_student():
   
 
 # Student search functionality
-def display_student_details(student_id):
-    # Retrieve student details from the database based on student_id
-    student = Student.get_by_id(student_id)
+# def display_student_details(student_id):
+#     # Retrieve student details from the database based on student_id
+#     student = Student.get_by_id(student_id)
     
-    if student:
-        # Display student details
-        console.print(f"Student ID: {student.id}")
-        console.print(f"Name: {student.name}")
-        console.print(f"Level: {student.level}")
+#     if student:
+#         # Display student details
+#         console.print(f"Student ID: {student.id}")
+#         console.print(f"Name: {student.name}")
+#         console.print(f"Level: {student.level}")
         
-        # Display student photo
-        if student.photo_path:
-            console.print(Fore.YELLOW + "Displaying student photo...")
-            os.system(f"xdg-open {student.photo_path}")  # Open photo using default image viewer
-        else:
-            console.print(Fore.RED + "No photo available for this student.")
-    else:
-        console.print(Fore.RED + f"No student found with ID '{student_id}'")
+#         # Display student photo
+#         if student.photo_path:
+#             console.print(Fore.YELLOW + "Displaying student photo...")
+#             os.system(f"xdg-open {student.photo_path}")  # Open photo using default image viewer
+#         else:
+#             console.print(Fore.RED + "No photo available for this student.")
+#     else:
+#         console.print(Fore.RED + f"No student found with ID '{student_id}'")
 
 def search_student_by_id():
     id = input(Fore.YELLOW + "Enter student ID: ")
@@ -103,7 +104,18 @@ def search_student_by_id():
         for student in students:
             table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
 
+            
+
         console.print(table)
+
+        # Display the student's image
+        image_path = f"/home/bennie/Development/phase3/school_admin_cli/photos/{id}.jpg"
+        if os.path.exists(image_path):
+            print(Fore.GREEN + f"Displaying image for student ID '{id}':")
+            os.system(f"chafa {image_path}")
+        else:
+            print(Fore.RED + f"Image not found for student ID '{id}'")
+
 
 def search_student_by_level():
     level = input(Fore.YELLOW + "Enter student level: ")
