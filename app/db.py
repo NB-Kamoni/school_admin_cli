@@ -23,6 +23,17 @@ def initialize_db():
         photo_path TEXT                      
     )
     ''')
+     #Create students table/enroll
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS teachers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        subject TEXT NOT NULL,
+        phone_number TEXT NOT NULL,
+        photo_path TEXT                      
+    )
+    ''')
 
      # Create inventory table
     cursor.execute('''

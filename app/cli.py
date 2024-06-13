@@ -15,11 +15,12 @@ from db import initialize_db
 from user import User
 from student import Student
 from inventory import Inventory
+from teacher import Teacher
 
 
 console = Console()
 
-
+################################students############
 # Select student photo
 def select_student_photo():
     root = tk.Tk()
@@ -65,42 +66,24 @@ def enroll_new_student():
 
     student.save_to_db()
     console.print(Fore.GREEN + "Student enrolled successfully!")
-  
 
-# Student search functionality
-# def display_student_details(student_id):
-#     # Retrieve student details from the database based on student_id
-#     student = Student.get_by_id(student_id)
-    
-#     if student:
-#         # Display student details
-#         console.print(f"Student ID: {student.id}")
-#         console.print(f"Name: {student.name}")
-#         console.print(f"Level: {student.level}")
-        
-#         # Display student photo
-#         if student.photo_path:
-#             console.print(Fore.YELLOW + "Displaying student photo...")
-#             os.system(f"xdg-open {student.photo_path}")  # Open photo using default image viewer
-#         else:
-#             console.print(Fore.RED + "No photo available for this student.")
-#     else:
-#         console.print(Fore.RED + f"No student found with ID '{student_id}'")
+#Student search functionality
 
 def search_student_by_id():
-    id = input(Fore.YELLOW + "Enter student ID: ")
+    print("")
+    id = input(Fore.LIGHTGREEN_EX + "Enter student ID: ")
     students = Student.get_by_id(id)
 
     if not students:
         print(Fore.RED + f"No students found at level '{id}'")
     else:
-        table = Table(show_header=True, header_style="bold green")
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
         table.add_column("ID", style="dim", width=6)
-        table.add_column("Name")
-        table.add_column("Age")
-        table.add_column("Parent Name")
-        table.add_column("Level")
-        table.add_column("Phone Number")
+        table.add_column("Name", style="bold magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Parent Name", style=" magenta")
+        table.add_column("Level", style=" bold magenta")
+        table.add_column("Phone Number", style="magenta")
 
         for student in students:
             table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
@@ -141,13 +124,13 @@ def search_student_by_level():
     if not students:
         console.print(Fore.RED + f"No students found at level '{level}'")
     else:
-        table = Table(show_header=True, header_style="bold green")
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
         table.add_column("ID", style="dim", width=6)
-        table.add_column("Name")
-        table.add_column("Age")
-        table.add_column("Parent Name")
-        table.add_column("Level")
-        table.add_column("Phone Number")
+        table.add_column("Name", style="magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Parent Name", style=" magenta")
+        table.add_column("Level", style="magenta")
+        table.add_column("Phone Number", style="magenta")
 
         for student in students:
             table.add_row(str(student[0]), student[1], str(student[2]), student[3], student[4], student[5])
@@ -200,7 +183,169 @@ def export_students_to_csv():
 
     console.print(Fore.GREEN + f"Student data has been exported to {filename}")
 
+################################STUDENTS END#######
+################################TEACHERS START#####
+# Select teacher photo
+def select_teacher_photo():
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    
+    file_path = filedialog.askopenfilename()  # Open file dialog window
+    
+    return file_path
+# enroll teacher
+def enroll_new_teacher():
+    name = input(Fore.LIGHTGREEN_EX + "Enter teacher name: ")
+    age = int(input(Fore.LIGHTGREEN_EX + "Enter teacher age: "))
+    subject = input(Fore.LIGHTGREEN_EX + "Enter teacher subject: ")
+    phone_number = input(Fore.LIGHTGREEN_EX + "Enter teacher's phone number: ")
 
+    teacher = Teacher(name, age, subject, phone_number)
+
+     # Select teacher photo
+    print("")
+    print(Fore.YELLOW + "Please select teacher photo...")
+    teacher_photo_path = select_teacher_photo()
+    
+    # Ensure a photo is selected
+    if not teacher_photo_path:
+        print(Fore.RED + "No photo selected. Teacher onboarding aborted.")
+        return
+
+    # Save teacher photo with an incrementing integer as filename
+    photos_directory = 'teacher_photos'
+    os.makedirs(photos_directory, exist_ok=True)
+
+    # Find the next available filename by iterating over existing files
+    next_filename = 1
+    while os.path.exists(os.path.join(photos_directory, f"{next_filename}.jpg")):
+        next_filename += 1
+
+    new_photo_path = os.path.join(photos_directory, f"{next_filename}.jpg")
+    shutil.copy(teacher_photo_path, new_photo_path)
+
+    # Update teacher object with photo path
+    teacher.photo_path = new_photo_path
+
+
+    teacher.save_to_db()
+    print("")
+    print(Fore.LIGHTMAGENTA_EX + "Teacher Onboarded successfully!")
+    print("")
+
+#Teacher search functionality
+
+def search_teacher_by_id():
+    print("")
+    id = input(Fore.LIGHTGREEN_EX + "Enter teacher ID: ")
+    teachers = Teacher.get_teachers_by_id(id)
+
+    if not teachers:
+        print(Fore.RED + f"No teacher found")
+    else:
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name", style="bold magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Subject", style=" bold magenta")
+        table.add_column("Phone Number", style="magenta")
+
+        for teacher in teachers:
+            table.add_row(str(teacher[0]), teacher[1], str(teacher[2]), teacher[3], teacher[4])
+
+            
+
+        console.print(table)
+
+         # Display the teacher's image
+        image_path = f"/home/bennie/Development/phase3/school_admin_cli/teacher_photos/{id}.jpg"
+    if os.path.exists(image_path):
+        print("\033[92m" + f"Opening image for teacher ID '{id}':")
+        webbrowser.open(image_path)
+
+         # Define the desired dimensions for resizing
+        width = 800
+        height = 600
+    
+           # Command to display the resized image with specific window geometry
+        command = ["display", "-resize", f"{width}x{height}", "-geometry", f"{width}x{height}+100+40", image_path]
+    
+          # Open the image using subprocess
+        subprocess.Popen(command)
+    
+            
+    else:
+         print("\033[91m" + f"Image not found for teacher ID '{id}'")
+
+
+
+
+
+
+def search_teacher_by_subject():
+    subject = input(Fore.LIGHTGREEN_EX + "Enter teacher subject: ")
+    teachers = Teacher.get_teachers_by_subject(subject)
+    
+    if not teachers:
+        console.print(Fore.RED + f"No teachers found for subject '{subject}'")
+    else:
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name", style="magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Subject", style="magenta")
+        table.add_column("Phone Number", style="magenta")
+
+        for teacher in teachers:
+            table.add_row(str(teacher[0]), teacher[1], str(teacher[2]), teacher[3], teacher[5])
+
+        console.print(table)
+
+# delete students
+def delete_teacher():
+    student_id = int(input(Fore.LIGHTGREEN_EX + "Enter teacher ID to delete: "))
+    Teacher.delete_teacher(student_id)
+    print(Fore.LIGHTGREEN_EX + "Teacher deleted successfully!")
+
+# show student tables
+def display_teachers_table():
+    teachers = Teacher.get_all_teachers()
+    if not teachers:
+        print(Fore.RED + "No teachers found.")
+    else:
+        print("")
+        print("")
+        print(Fore.LIGHTGREEN_EX + "Teacher Records")
+        print("")
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name", style="magenta")
+        table.add_column("Age", style="magenta")
+        table.add_column("Subject", style="magenta")
+        table.add_column("Phone Number", style="magenta")
+
+        for teacher in teachers:
+            table.add_row(str(teacher[0]), teacher[1], str(teacher[2]), teacher[3], teacher[4])
+
+        console.print(table)
+
+# Download students data
+def export_teachers_to_csv():
+    teachers = Teacher.get_all_teacher()
+    if not teachers:
+        console.print(Fore.RED + "No teachers found.")
+        return
+
+    filename = "teachers.csv"
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        # Writing headers
+        writer.writerow(["ID", "Name", "Age", "Subject", "Phone Number"])
+        # Writing student data
+        writer.writerows(teachers)
+
+    console.print(Fore.GREEN + f"Teacher data has been exported to {filename}")
+################################TEACHERS END#######
 # inventory
 def add_inventory_item():
     item_name = input(Fore.YELLOW + "Enter item name: ")
@@ -236,7 +381,7 @@ def main():
 
     while attempts < 3:
         console.print("\n" * 3)
-        console.print("KAMONI-SCHOOL ADMIN CLI", justify="center", style="bold green underline")
+        console.print("KAMONI-SCHOOL CLI ADMIN  TOOL", justify="center", style="bold green underline")
         print(Fore.LIGHTMAGENTA_EX + "An admin tool for managing student enrollment, schoolfees, exams, teacher allocation and inventory.")
         print("")
         print("Please try again" if attempts > 0 else "Please Login")
@@ -246,18 +391,20 @@ def main():
         if User.authenticate(username, password):
             print(Fore.LIGHTGREEN_EX + "Successfully logged in")
             while True:
-                print(Fore.LIGHTMAGENTA_EX + "\nMenu:")
-                print("1. Students")
-                print("2. Grades")
+                print(Fore.LIGHTMAGENTA_EX + "\nAdmin Panel:")
+                print("")
+                print("1. Student Records")
+                print("2. Teacher Records")
                 print("3. School Fees")
                 print("4. Budget")
                 print("5. Inventory")
-                print("6. Summary")
+                print("6. Exam Records")
                 print("7. Logout")
                 print("")
                 choice = input(Fore.LIGHTGREEN_EX + "Choose an option: ")
+                print("")
                 if choice == '1':
-                    print("Managing Students")
+                    print(Fore.LIGHTMAGENTA_EX + "Managing Student Records")
                     print("")
                     while True:
                         print("e :Enroll New Student")
@@ -266,18 +413,28 @@ def main():
                         print("g :Get csv data")
                         print("f :find")
                         print("b :Back")
+                        print("")
                         choice = input(Fore.LIGHTGREEN_EX + "Choose action:")
+                        print("")
                         if choice == 'e':
                            enroll_new_student()
                         elif choice == 'd':
                             delete_student()
                         elif choice == 's':
                             display_students_table()
+                        elif choice == 'g':
+                            export_students_to_csv()
+
                         elif choice == 'f':
+                            print("")
+                            print(Fore.LIGHTMAGENTA_EX + "Searching Student Records")
+                            print("")
                             print("1 :Search by ID")
                             print("2 :Search by Level")
                             print("3 :Back")
+                            print("")
                             search_choice = input(Fore.LIGHTGREEN_EX + "Choose search option: ")
+                            
                             if search_choice == '1':
                                 search_student_by_id()
                             elif search_choice == '2':
@@ -292,10 +449,56 @@ def main():
             
                         elif choice == 'b':
                             break
-                    
+                    #---------teacher records-------
                 elif choice == '2':
-                    print(Fore.LIGHTGREEN_EX  + "Deregistering student...")
-                    delete_student()
+                    print(Fore.LIGHTMAGENTA_EX  + "Managing Teacher Records")
+                    print("")
+                    if choice == '1':
+                        print("")
+                    while True:
+                        print("e :Enroll New Teacher")
+                        print("d :Deregister Teacher")
+                        print("s :Show Teacher Data")
+                        print("g :Get csv data")
+                        print("f :find")
+                        print("b :Back")
+                        print("")
+                        choice = input(Fore.LIGHTGREEN_EX + "Choose action:")
+                        print("")
+                        if choice == 'e':
+                           enroll_new_teacher()
+                        elif choice == 'd':
+                            delete_teacher()
+                        elif choice == 's':
+                            display_teachers_table()
+                        elif choice == 'g':
+                            export_teachers_to_csv()
+
+                        elif choice == 'f':
+                            print("")
+                            print(Fore.LIGHTMAGENTA_EX + "Searching Teacher Records")
+                            print("")
+                            print("1 :Search by ID")
+                            print("2 :Search by Subject")
+                            print("3 :Back")
+                            print("")
+                            search_choice = input(Fore.LIGHTGREEN_EX + "Choose search option: ")
+                            
+                            if search_choice == '1':
+                                search_teacher_by_id()
+                            elif search_choice == '2':
+                                search_teacher_by_subject()
+                            elif choice == '3':
+                                break
+                            else:
+                                console.print(Fore.RED + "Invalid choice, please try again.")
+                            
+                        elif choice == 'g':
+                            export_teachers_to_csv()
+            
+                        elif choice == 'b':
+                            break
+                    #---------end-teacher records----
                 elif choice == '3':
                     print(Fore.LIGHTGREEN_EX  + "School Fees...")
                 elif choice == '4':
@@ -322,7 +525,7 @@ def main():
                             console.print(Fore.RED + "Invalid choice, please try again.")
                             
                 elif choice == '6':
-                    print(Fore.LIGHTGREEN_EX  + "Generating summary...")
+                    print(Fore.LIGHTGREEN_EX  + "Exam Records")
                     # Implement summary functionality here
                 elif choice == '7':
                     print(Fore.GREEN + "Goodbye!")
