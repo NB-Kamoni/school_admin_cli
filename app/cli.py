@@ -6,6 +6,7 @@ from tkinter import filedialog
 import shutil
 import os
 import csv
+import webbrowser
 from colorama import Fore
 from rich.console import Console
 from rich.table import Table
@@ -110,11 +111,13 @@ def search_student_by_id():
 
         # Display the student's image
         image_path = f"/home/bennie/Development/phase3/school_admin_cli/photos/{id}.jpg"
-        if os.path.exists(image_path):
-            print(Fore.GREEN + f"Displaying image for student ID '{id}':")
-            os.system(f"chafa {image_path}")
-        else:
-            print(Fore.RED + f"Image not found for student ID '{id}'")
+    if os.path.exists(image_path):
+        print("\033[92m" + f"Opening image for student ID '{id}':")
+        webbrowser.open(image_path)
+    else:
+         print("\033[91m" + f"Image not found for student ID '{id}'")
+
+
 
 
 def search_student_by_level():
