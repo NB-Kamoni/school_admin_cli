@@ -115,11 +115,16 @@ def search_student_by_id():
         print("\033[92m" + f"Opening image for student ID '{id}':")
         webbrowser.open(image_path)
 
-         # Command to display the image with specific window geometry
-        command = ["display", "-geometry", "800x800+100+100", image_path]
+         # Define the desired dimensions for resizing
+        width = 800
+        height = 600
     
-         # Open the image using subprocess
+           # Command to display the resized image with specific window geometry
+        command = ["display", "-resize", f"{width}x{height}", "-geometry", f"{width}x{height}+100+40", image_path]
+    
+          # Open the image using subprocess
         subprocess.Popen(command)
+    
             
     else:
          print("\033[91m" + f"Image not found for student ID '{id}'")
