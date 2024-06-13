@@ -5,12 +5,12 @@ import tkinter as tk
 from tkinter import filedialog
 import shutil
 import os
+import subprocess
 import csv
 import webbrowser
 from colorama import Fore
 from rich.console import Console
 from rich.table import Table
-from rich import print
 from db import initialize_db
 from user import User
 from student import Student
@@ -109,13 +109,22 @@ def search_student_by_id():
 
         console.print(table)
 
-        # Display the student's image
+         # Display the student's image
         image_path = f"/home/bennie/Development/phase3/school_admin_cli/photos/{id}.jpg"
     if os.path.exists(image_path):
         print("\033[92m" + f"Opening image for student ID '{id}':")
         webbrowser.open(image_path)
+
+         # Command to display the image with specific window geometry
+        command = ["display", "-geometry", "800x800+100+100", image_path]
+    
+         # Open the image using subprocess
+        subprocess.Popen(command)
+            
     else:
          print("\033[91m" + f"Image not found for student ID '{id}'")
+
+
 
 
 
