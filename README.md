@@ -89,7 +89,7 @@ test password: pw
 5. **Allocate teacher to students**
 6. **Find**
 
-## Teache records
+## Teacher records
 
 1. **Enroll new teacher**
 2. **Deregister teacher**
