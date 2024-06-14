@@ -100,7 +100,7 @@ The student will be removed from the database.
 3. **Show student data**
 
 Choose the "Students" option from the main menu.
-Select 's' to show student the student record.
+Select 's' to show student from the student record.
 
 4. **Get CSV data**
 
@@ -124,8 +124,39 @@ The student details will be displayed, including the student photo if available.
 ## Teacher records
 
 1. **Enroll new teacher**
+
+Choose the "Teacher Records" option from the main menu.
+Select 'e' to enroll a new teacher.
+Follow the prompts to enter teachers's details (name, age, subject, phone number).
+You will be asked to select a teacher's photo from your file system.
+The teacher's details and photo will be saved to the database.
+
 2. **Deregister teacher**
+
+Choose the "Teacher Records" option from the main menu.
+Select 'd' to deregister a teacher.
+Enter the teacher ID of the teacher you wish to deregister.
+The teacher will be removed from the database.
+
+
 3. **Show teacher data**
+
+Choose the "Teacher Records" option from the main menu.
+Select 's' to show teacher from the teacher record.
+
 4. **Get CSV data**
+
+Choose the "Teacher Record" option from the main menu.
+Select 'g' to export teacher data to a CSV file.
+
 5. **Find**
+
+Choose the "Teacher Records" option from the main menu.
+Select 'f' to find a teacher.
+Choose 1 to search by ID, 2 to search by subject
+Follow the prompts to enter the search criteria.
+The teacher details will be displayed, including the teacher photo if available.
+
 ## Logout
+
+When you are done, simply logout
