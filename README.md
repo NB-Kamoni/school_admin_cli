@@ -51,6 +51,13 @@ ensure that Tkinter is installed...
 sudo apt-get install python3-tk
 
 ```
+also ensure image magick is installed so that after searching for students and teachers by ID, their images can be displayed along with their images.
+
+```
+sudo apt-get update
+sudo apt-get install imagemagick
+
+```
 
 ## Initialization
 
