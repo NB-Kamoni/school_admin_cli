@@ -95,7 +95,7 @@ def search_student_by_id():
         console.print(table)
 
          # Display the student's image
-        image_path = f"/home/bennie/Development/phase3/school_admin_cli/photos/{id}.jpg"
+        image_path = f"./photos/{id}.jpg"
     if os.path.exists(image_path):
         print("\033[92m" + f"Opening image for student ID '{id}':")
         webbrowser.open(image_path)
