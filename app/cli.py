@@ -31,21 +31,21 @@ def select_student_photo():
     return file_path
 # enroll students
 def enroll_new_student():
-    name = input(Fore.YELLOW + "Enter student name: ")
-    age = int(input(Fore.YELLOW + "Enter student age: "))
-    parent_name = input(Fore.YELLOW + "Enter parent name: ")
-    level = input(Fore.YELLOW + "Enter student level: ")
-    phone_number = input(Fore.LIGHTMAGENTA_EX + "Enter parent's phone number: ")
+    name = input(Fore.LIGHTGREEN_EX + "Enter student name: ")
+    age = int(input(Fore.LIGHTGREEN_EX + "Enter student age: "))
+    parent_name = input(Fore.LIGHTGREEN_EX + "Enter parent name: ")
+    level = input(Fore.LIGHTGREEN_EX + "Enter student level: ")
+    phone_number = input(Fore.LIGHTGREEN_EX + "Enter parent's phone number: ")
 
     student = Student(name, age, parent_name, level, phone_number)
 
      # Select student photo
-    console.print(Fore.YELLOW + "Please select student photo...")
+    print(Fore.LIGHTGREEN_EX + "Please select student photo...")
     student_photo_path = select_student_photo()
     
     # Ensure a photo is selected
     if not student_photo_path:
-        console.print(Fore.RED + "No photo selected. Student enrollment aborted.")
+        print(Fore.RED + "No photo selected. Student enrollment aborted.")
         return
 
     # Save student photo with an incrementing integer as filename
@@ -65,7 +65,9 @@ def enroll_new_student():
 
 
     student.save_to_db()
-    console.print(Fore.GREEN + "Student enrolled successfully!")
+    print("")
+    print(Fore.LIGHTGREEN_EX + "Student enrolled successfully!")
+    print("")
 
 #Student search functionality
 
@@ -118,7 +120,7 @@ def search_student_by_id():
 
 
 def search_student_by_level():
-    level = input(Fore.YELLOW + "Enter student level: ")
+    level = input(Fore.LIGHTGREEN_EX + "Enter student level: ")
     students = Student.get_by_level(level)
     
     if not students:
@@ -373,6 +375,68 @@ def display_inventory():
 
     console.print(table)
 
+##---------------Teacher allocation----------------
+def allocate_teacher_to_student():
+    teachers = Teacher.get_all_teachers()
+    students = Student.get_all_students()
+
+    if not teachers:
+        console.print(Fore.RED + "No teachers available.")
+        return
+
+    if not students:
+        console.print(Fore.RED + "No students available.")
+        return
+
+    console.print("Teachers:")
+    for teacher in teachers:
+        print(Fore.LIGHTMAGENTA_EX + f"{teacher[0]}. {teacher[1]} - {teacher[2]}")
+
+    teacher_id = int(input(Fore.LIGHTGREEN_EX + "Enter teacher ID to allocate: "))
+
+    # console.print("Students:")
+    # for student in students:
+    #     console.print(f"{student[0]}. {student[1]}")
+
+    student_ids = input(Fore.LIGHTGREEN_EX + "Enter student IDs to allocate (comma-separated): ")
+    student_ids = [int(id.strip()) for id in student_ids.split(',')]
+
+    for student_id in student_ids:
+        Student.allocate_teacher_to_student(teacher_id, student_id)
+
+    print(Fore.LIGHTGREEN_EX + "Teacher allocated to students successfully!")
+## Search by teacher
+def view_students_by_teacher():
+    teachers = Teacher.get_all_teachers()
+
+    if not teachers:
+        console.print(Fore.RED + "No teachers available.")
+        return
+
+    print(Fore.LIGHTMAGENTA_EX + "Teachers:")
+    for teacher in teachers:
+        print(Fore.LIGHTMAGENTA_EX + f"{teacher[0]}. {teacher[1]} - {teacher[2]}")
+
+    teacher_id = int(input(Fore.LIGHTGREEN_EX + "Enter teacher ID to view students: "))
+    students = Student.get_students_by_teacher(teacher_id)
+
+    if not students:
+        console.print(Fore.RED + "No students allocated to this teacher.")
+    else:
+        print("")
+        table = Table(show_header=True, header_style="bold green", show_lines=False, style="magenta")
+        table.add_column("ID", style="dim", width=6)
+        table.add_column("Name", style="magenta")
+        table.add_column("Level", style="magenta")
+        print("")
+
+
+        for student in students:
+            table.add_row(str(student[0]), student[1], str(student[4]))
+
+        console.print(table)
+        print(Fore.LIGHTMAGENTA_EX + "")
+####################################CLI CONTENT STARTS HERE############################
 def main():
     initialize_db()
     attempts = 0
@@ -411,6 +475,7 @@ def main():
                         print("d :Deregister Student")
                         print("s :Show Student Data")
                         print("g :Get csv data")
+                        print("a :Allocate Teacher to Student")
                         print("f :find")
                         print("b :Back")
                         print("")
@@ -424,6 +489,8 @@ def main():
                             display_students_table()
                         elif choice == 'g':
                             export_students_to_csv()
+                        elif choice == 'a':
+                            allocate_teacher_to_student()
 
                         elif choice == 'f':
                             print("")
@@ -431,7 +498,8 @@ def main():
                             print("")
                             print("1 :Search by ID")
                             print("2 :Search by Level")
-                            print("3 :Back")
+                            print("3 :Search by teacher")
+                            print("4 :Back")
                             print("")
                             search_choice = input(Fore.LIGHTGREEN_EX + "Choose search option: ")
                             
@@ -439,10 +507,11 @@ def main():
                                 search_student_by_id()
                             elif search_choice == '2':
                                 search_student_by_level()
-                            elif choice == '3':
+                            elif search_choice == '3': view_students_by_teacher()
+                            elif choice == '4':
                                 break
                             else:
-                                console.print(Fore.RED + "Invalid choice, please try again.")
+                                print(Fore.RED + "Invalid choice, please try again.")
                             
                         elif choice == 'g':
                             export_students_to_csv()

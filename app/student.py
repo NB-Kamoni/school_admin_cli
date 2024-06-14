@@ -50,3 +50,25 @@ class Student:
         students = cursor.fetchall()
         conn.close()
         return students
+    
+    @staticmethod
+    def allocate_teacher_to_student(teacher_id, student_id):
+        conn = sqlite3.connect('school.db')
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO teacher_student (teacher_id, student_id) VALUES (?, ?)', 
+                       (teacher_id, student_id))
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def get_students_by_teacher(teacher_id):
+        conn = sqlite3.connect('school.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+        SELECT students.* FROM students
+        JOIN teacher_student ON students.id = teacher_student.student_id
+        WHERE teacher_student.teacher_id = ?
+        ''', (teacher_id,))
+        students = cursor.fetchall()
+        conn.close()
+        return students
