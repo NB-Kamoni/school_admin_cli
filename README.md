@@ -159,4 +159,4 @@ The teacher details will be displayed, including the teacher photo if available.
 
 ## Logout
 
-When you are done, simply logout
+Logout When you are done... 🎉🎊
