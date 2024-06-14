@@ -27,6 +27,73 @@ Welcome to the Kamoni School Admin CLI Tool! This tool is designed to help schoo
 ## Installation
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-repo/kamoni-school-admin-cli.git
-   cd kamoni-school-admin-cli
+   
+  ```
+   git clone git@github.com:NB-Kamoni/school_admin_cli.git
+
+  ```
+move into the working directory
+
+  ```
+  cd .../school_admin_cli
+
+  ```
+
+2. **Install dependensies**
+
+```
+pip install -r requirements.txt
+
+```
+ensure that Tkinter is installed...
+
+```
+sudo apt-get install python3-tk
+
+```
+
+## Initialization
+
+1. **Activate the virtual env**
+
+```
+source venv/bin/activate
+
+```
+2. **Initialize the database**
+
+```
+app/cli.py
+
+```
+## Usage
+
+1. **Run CLI tool**
+
+```
+app/cli.py
+
+```
+## Login
+You will be prompted to log in. Enter your username and password to access the tool. If you fail to log in three times, you will be blocked.
+
+test username: test
+test password: pw
+
+## Student management
+
+1. **Enroll new student**
+2. **Deregister student**
+3. **Show student data**
+4. **Get CSV data**
+5. **Allocate teacher to students**
+6. **Find**
+
+## Teache records
+
+1. **Enroll new teacher**
+2. **Deregister teacher**
+3. **Show teacher data**
+4. **Get CSV data**
+5. **Find**
+## Logout
